@@ -1,0 +1,21 @@
+echo "Updating package manager" # 输出"Updating package manager"，表示正在更新包管理器
+mkdir -p $PREFIX/glibc/opt/package-manager/installed # 创建一个新的目录，用于存放已安装的包
+echo "PRIVATE_TOKEN=glpat-Xs4HfrCkMpbedkPycqzP
+PROJECT_ID=52465323">$PREFIX/glibc/opt/package-manager/token # 创建一个包含私有令牌和项目ID的文件
+. $PREFIX/glibc/opt/package-manager/token # 读取并执行该文件，将私有令牌和项目ID设置为环境变量
+function wget-git-q { # 定义一个函数，用于从GitLab下载文件
+    wget -q --retry-connrefused --tries=0 --header "PRIVATE-TOKEN: $PRIVATE_TOKEN" "https://gitlab.com/api/v4/projects/$PROJECT_ID/repository/files/$1/raw?ref=main" -O $2
+    return $?
+}
+wget-git-q "package-manager" "$PREFIX/glibc/opt/package-manager/package-manager" # 使用定义的函数下载包管理器
+# Check if the script is being sourced or not
+if [ "$0" != "$BASH_SOURCE" ]; then
+    . $PREFIX/glibc/opt/package-manager/package-manager
+else
+    echo "This script should be sourced, not executed directly."
+fi
+sync-all # 同步所有的包
+sync-package wine-ge-custom # 同步特定的包，这里是wine-ge-custom
+ln -sf $PREFIX/glibc/opt/scripts/mobox $PREFIX/bin/mobox # 创建一个软链接，指向mobox脚本
+
+echo "To start - type \"mobox\"" # 输出"To start - type \"mobox\""，表示要启动mobox，只需输入mobox即可

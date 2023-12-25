@@ -13,6 +13,7 @@ if [ "$0" != "$BASH_SOURCE" ]; then
     . $PREFIX/glibc/opt/package-manager/package-manager
 else
     echo "This script should be sourced, not executed directly."
+    return 1  # 或者使用 exit 1
 fi
 sync-all # 同步所有的包
 sync-package wine-ge-custom # 同步特定的包，这里是wine-ge-custom
